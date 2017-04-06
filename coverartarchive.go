@@ -45,6 +45,11 @@ func (c *Client) ReleaseCoverArt(mbid string) (*CoverArtResponse, error) {
 	return response, c.getBody(fmt.Sprintf("release/%s", mbid), response)
 }
 
+func (c *Client) ReleaseGroupCoverArt(mbid string) (*CoverArtResponse, error) {
+	response := new(CoverArtResponse)
+	return response, c.getBody(fmt.Sprintf("release-group/%s", mbid), response)
+}
+
 func (c *Client) ReleaseFrontCoverArtURL(mbid string) (string, error) {
 	return c.getRedirectLocation(fmt.Sprintf("release/%s/front", mbid))
 }
