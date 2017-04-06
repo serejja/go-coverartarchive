@@ -125,28 +125,19 @@ func (c *Client) get(path string, followRedirects bool) (*http.Response, error) 
 }
 
 func (c *Client) handleError(response *http.Response) error {
-	fmt.Println("Handle error")
-	// TODO
-	return nil
-}
-
-func preserveHeadersOnRedirect(maxRedirects int) func(*http.Request, []*http.Request) error {
-	return func(req *http.Request, via []*http.Request) error {
-		if len(via) > maxRedirects {
-			return ErrMaxRedirectsReached
+	switch response.StatusCode {
+	case http.StatusBadRequest:
+		return ErrInvalidMBID
+	case http.StatusNotFound:
+		return ErrNotFound
+	case http.StatusServiceUnavailable:
+		return ErrRateLimitReached
+	default:
+		errorResponse, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			return fmt.Errorf("Received error response with status %d", response.StatusCode)
 		}
-
-		if len(via) == 0 {
-			// No redirects
-			return nil
-		}
-
-		// mutate the subsequent redirect requests with the first Header
-		for key, val := range via[0].Header {
-			req.Header[key] = val
-		}
-
-		return nil
+		return fmt.Errorf("Received error response with status %d and message %s", response.StatusCode, string(errorResponse))
 	}
 }
 

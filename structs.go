@@ -1,20 +1,22 @@
 package coverartarchive
 
+import "encoding/json"
+
 type Thumbnails struct {
 	Large string `json:"large"`
 	Small string `json:"small"`
 }
 
 type Image struct {
-	ID         string     `json:"id"`
-	URL        string     `json:"image"`
-	Edit       int        `json:"edit"`
-	Approved   bool       `json:"approved"`
-	Back       bool       `json:"back"`
-	Front      bool       `json:"front"`
-	Comment    string     `json:"comment"`
-	Thumbnails Thumbnails `json:"thumbnails"`
-	Types      []string   `json:"types"`
+	ID         json.Number `json:"id,Number"`
+	URL        string      `json:"image"`
+	Edit       int         `json:"edit"`
+	Approved   bool        `json:"approved"`
+	Back       bool        `json:"back"`
+	Front      bool        `json:"front"`
+	Comment    string      `json:"comment"`
+	Thumbnails Thumbnails  `json:"thumbnails"`
+	Types      []string    `json:"types"`
 }
 
 type CoverArtResponse struct {
